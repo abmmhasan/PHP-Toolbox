@@ -7,7 +7,7 @@ namespace AbmmHasan\Toolbox\Storage;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class File
+final class File
 {
     /**
      * Get the List of files for a location

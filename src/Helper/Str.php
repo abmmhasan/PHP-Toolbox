@@ -6,7 +6,7 @@ namespace AbmmHasan\Toolbox\Helper;
  * Class Str
  * @package AbmmHasan\Toolbox\Helper
  */
-class Str
+final class Str
 {
 
     /**

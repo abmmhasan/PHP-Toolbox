@@ -4,7 +4,7 @@
 namespace AbmmHasan\Toolbox\Security;
 
 
-class Password
+final class Password
 {
     private static $combo = [
         'u' => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
@@ -20,7 +20,14 @@ class Password
         's2' => ['^', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', ' 3', '4', '5', '6', '7', '8', '9', ' '],
     ];
 
-    public static function generateRandom(int $length = 9)
+    /**
+     * Generate a random secure password
+     *
+     * @param int $length
+     * @return string
+     * @throws \Exception
+     */
+    public static function random(int $length = 9)
     {
         if ($length < 8) {
             throw new \Exception('Password length should be atleast 8');
@@ -35,7 +42,14 @@ class Password
         return $password;
     }
 
-    public static function convertString(string $string)
+    /**
+     * Convert a given string to a secure password for easy memorizing
+     *
+     * @param string $string
+     * @return string
+     * @throws \Exception
+     */
+    public static function fromString(string $string)
     {
         $string = str_split(strtolower($string));
         $converted = [];

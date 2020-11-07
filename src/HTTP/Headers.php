@@ -2,7 +2,7 @@
 
 namespace AbmmHasan\Toolbox\HTTP;
 
-class Headers
+final class Headers
 {
     private static $headers;
     private static $accept;

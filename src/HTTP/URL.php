@@ -5,10 +5,15 @@ namespace AbmmHasan\Toolbox\HTTP;
 
 
 
-class URL
+final class URL
 {
     private static $url;
 
+    /**
+     * Get current URL (parsed)
+     *
+     * @return array
+     */
     public static function get()
     {
         if (self::$url) {

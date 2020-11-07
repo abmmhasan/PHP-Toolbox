@@ -11,6 +11,13 @@ final class Path
     private static $path;
     private static $instance;
 
+    /**
+     * Set or Get formatted location by given path constant
+     *
+     * @param $name
+     * @param $params
+     * @return array|bool|string
+     */
     public static function __callStatic($name, $params)
     {
         if ($name == 'set') {

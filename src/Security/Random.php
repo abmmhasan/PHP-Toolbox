@@ -4,7 +4,7 @@
 namespace AbmmHasan\Toolbox\Security;
 
 
-class Random
+final class Random
 {
     /**
      * Generate Secure random string of given length

@@ -6,23 +6,12 @@ namespace AbmmHasan\Toolbox\Helper;
  * Class Arr
  * @package AbmmHasan\Toolbox\Helper
  */
-class Arr
+final class Arr
 {
     /**
      * @var
      */
     private static $multi;
-
-    /**
-     * Determine whether the given value is accessible as an array.
-     *
-     * @param $array
-     * @return bool
-     */
-    public static function accessible($array)
-    {
-        return is_array($array);
-    }
 
     /**
      * Reset the current array status(single or multi).
@@ -49,6 +38,28 @@ class Arr
         } else {
             self::$multi = false;
         }
+    }
+
+    /**
+     * Checks if array is multidimensional or not
+     *
+     * @param $array
+     * @return bool
+     */
+    public static function isMulti($array)
+    {
+        return is_array($array) && count($array) !== count($array, COUNT_RECURSIVE);
+    }
+
+    /**
+     * Determine whether the given value is accessible as an array.
+     *
+     * @param $array
+     * @return bool
+     */
+    public static function accessible($array)
+    {
+        return is_array($array);
     }
 
 
@@ -302,7 +313,7 @@ class Arr
             } else {
                 $values = $depth === 1
                     ? array_values($item)
-                    : self::flatten($item, $depth - 1);
+                    : self::flatten($item, (int)$depth - 1);
                 foreach ($values as $value) {
                     $result[] = $value;
                 }
@@ -522,17 +533,6 @@ class Arr
             }
             unset($array[array_shift($parts)]);
         }
-    }
-
-    /**
-     * Checks if array is multidimensional or not
-     *
-     * @param $array
-     * @return bool
-     */
-    public static function isMulti($array)
-    {
-        return self::$multi = is_array($array) && count($array) !== count($array, COUNT_RECURSIVE);
     }
 
     /**
@@ -928,8 +928,8 @@ class Arr
      *
      * @param $array
      * @param string $index | $operator
-     * @param null $operator | $value
-     * @param null $value
+     * @param null|string $operator | $value
+     * @param null|string $value
      * @return array
      */
     public static function where($array, string $index, $operator = null, $value = null)
@@ -954,7 +954,7 @@ class Arr
      *
      * @param $array
      * @param string $index | $from
-     * @param $from | $to
+     * @param int|float $from | $to
      * @param null $to
      * @return array
      */
@@ -994,7 +994,7 @@ class Arr
      *
      * @param $array
      * @param string $column | $glue
-     * @param null $glue
+     * @param null|string $glue
      * @return string
      */
     public static function implode($array, string $column, $glue = null)

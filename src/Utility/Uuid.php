@@ -6,7 +6,7 @@ namespace AbmmHasan\Toolbox\Utility;
 
 use AbmmHasan\Toolbox\Security\Random;
 
-class Uuid
+final class Uuid
 {
     private static $nsList = [
         'dns', 'url', 'oid', 'x500'
@@ -65,8 +65,7 @@ class Uuid
     {
         $string = str_split($string, 4);
         return sprintf("%08s-%04s-{$version}%03s-%04x-%012s",
-            $string[0] . $string[1],
-            $string[2],
+            $string[0] . $string[1], $string[2],
             substr($string[3], 1, 3),
             hexdec($string[4]) & 0x3fff | 0x8000,
             $string[5] . $string[6] . $string[7]

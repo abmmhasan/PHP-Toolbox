@@ -5,7 +5,7 @@ namespace AbmmHasan\Toolbox\Security;
 use DateTime;
 use Exception;
 
-class Crypt
+final class Crypt
 {
     /**
      * Cipher algorithm
@@ -101,6 +101,7 @@ class Crypt
 
     /**
      * Get a JWT token
+     *
      * @param int $userId
      * @param array $payloads
      * @return string
@@ -117,6 +118,7 @@ class Crypt
 
     /**
      * Get a JWT content or null if empty
+     *
      * @param string $jwt
      * @return array|null
      */

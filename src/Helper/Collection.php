@@ -9,7 +9,7 @@ use Traversable;
  * The Collection class allows you to access a set of data
  * using both array and object notation.
  */
-class Collection implements \ArrayAccess, \Iterator, \Countable
+final class Collection implements \ArrayAccess, \Iterator, \Countable
 {
     /**
      * Collection data.

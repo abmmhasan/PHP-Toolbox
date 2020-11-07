@@ -11,6 +11,11 @@ final class IP
     private static $checkedIps = [];
     private static $clientIp;
 
+    /**
+     * Get Client IP
+     *
+     * @return string
+     */
     public static function get()
     {
         if (self::$clientIp) {
