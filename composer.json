@@ -1,25 +1,29 @@
 {
-    "name": "abmmhasan/php-toolbox",
-    "description": "A Collection of useful PHP functions.",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "abmmhasan",
-            "email": "abmmhasan346@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "AbmmHasan\\Toolbox\\Helper\\": "src/Helper/",
-            "AbmmHasan\\Toolbox\\Security\\": "src/Security/"
-        },
-        "files": [
-            "src/functions/part01.php"
-        ]
-    },
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=7.1"
+  "name": "abmmhasan/php-toolbox",
+  "description": "A Collection of useful PHP functions.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "abmmhasan",
+      "email": "abmmhasan346@gmail.com"
     }
+  ],
+  "autoload": {
+    "files": [
+      "src/functions/standalone.php",
+      "src/functions/dependent.php"
+    ],
+    "psr-4": {
+      "AbmmHasan\\Toolbox\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.1",
+    "ext-openssl": "*",
+    "ext-mbstring": "*",
+    "ext-json": "*",
+    "ext-ctype": "*"
+  }
 }

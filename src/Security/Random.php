@@ -28,7 +28,6 @@ class Random
      *
      * @param int $length
      * @return false|string
-     * @throws \Exception
      */
     public static function number($length = 6)
     {
@@ -41,4 +40,14 @@ class Random
         }
     }
 
+    /**
+     * Generate random boolean
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public static function bool()
+    {
+        return random_int(0, 1) === 1;
+    }
 }

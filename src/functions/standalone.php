@@ -30,6 +30,7 @@ if (!function_exists('env')) {
         return value($value);
     }
 }
+
 if (!function_exists('value')) {
     /**
      * Return value in exact form
@@ -59,6 +60,7 @@ if (!function_exists('value')) {
         return $value;
     }
 }
+
 if (!function_exists('compare')) {
     /**
      * Get compared according to the operator.
@@ -93,6 +95,7 @@ if (!function_exists('compare')) {
         }
     }
 }
+
 if (!function_exists('is_blank')) {
     /**
      * Determine if the given value is "blank".
@@ -121,6 +124,7 @@ if (!function_exists('is_blank')) {
         return empty($value);
     }
 }
+
 if (!function_exists('retry')) {
     /**
      * Retry an operation a given number of times.
@@ -158,6 +162,7 @@ if (!function_exists('retry')) {
         }
     }
 }
+
 if (!function_exists('formatBytes')) {
     /**
      * Get Human readable Byte format
@@ -177,6 +182,7 @@ if (!function_exists('formatBytes')) {
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
 }
+
 if (!function_exists('duration')) {
     /**
      * Get time spend for a process (in microseconds)
@@ -192,6 +198,7 @@ if (!function_exists('duration')) {
         return microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
     }
 }
+
 if (!function_exists('httpDate')) {
     /**
      * Converts any recognizable date format to an HTTP date.
@@ -210,7 +217,7 @@ if (!function_exists('httpDate')) {
 
         try {
             $date->setTimeZone(new \DateTimeZone('UTC'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $date = new \DateTime('0001-01-01', new \DateTimeZone('UTC'));
         } finally {
             return $date->format('D, d M Y H:i:s') . ' GMT';
