@@ -74,7 +74,7 @@ class Arr
      * @param string|int $key
      * @return bool
      */
-    public static function exists($array, $key)
+    public static function exists(array $array, $key)
     {
         return isset($array[$key]) || array_key_exists($key, $array);
     }
@@ -91,7 +91,7 @@ class Arr
         if (is_null($keys) || count($array) < 1) {
             return false;
         }
-        if (self::exists($array, $keys)) {
+        if (is_string($keys) && self::exists($array, $keys)) {
             return true;
         }
         $keys = (array)$keys;
@@ -118,7 +118,7 @@ class Arr
      */
     public static function hasAny($array, $keys)
     {
-        if (is_null($keys)) {
+        if (empty($keys)) {
             return false;
         }
 
@@ -146,16 +146,16 @@ class Arr
      * Get item(s) from an array using "dot" notation.
      *
      * @param $array
-     * @param string|int $key
+     * @param string|int|array $keys
      * @param mixed $default
      * @return mixed
      */
-    public static function get($array, $key, $default = null)
+    public static function get($array, $keys, $default = null)
     {
-        if (is_array($key)) {
-            return self::getMany($array, $key, $default);
+        if (is_array($keys)) {
+            return self::getMany($array, $keys, $default);
         }
-        return self::getValue($array, $key, $default);
+        return self::getValue($array, $keys, $default);
     }
 
     /**
@@ -164,18 +164,18 @@ class Arr
      * If no key is given to the method, the entire array will be replaced.
      *
      * @param $array
-     * @param string $key
+     * @param string|array $keys
      * @param mixed $value
      * @return bool
      */
-    public static function set(&$array, $key, $value)
+    public static function set(&$array, $keys, $value)
     {
         if (count($array) < 1) {
             return false;
         }
-        $keys = is_array($key) ? $key : [$key => $value];
-        foreach ($keys as $key => $value) {
-            self::setValue($array, $key, $value);
+        $keys = is_array($keys) ? $keys : [$keys => $value];
+        foreach ($keys as $key => $item) {
+            self::setValue($array, $key, $item);
         }
         return true;
     }
@@ -216,6 +216,7 @@ class Arr
      * @param mixed $value
      * @param mixed $key
      * @return array
+     * @throws \Exception
      */
 
     public static function prepend(array &$array, $value, $key = null)
@@ -224,6 +225,9 @@ class Arr
             $process = self::get($array, $key);
         } else {
             $process = $array;
+        }
+        if (!is_array($process)) {
+            throw new \Exception('Invalid operation!');
         }
         array_unshift($process, $value);
         self::set($array, $key, $process);
@@ -234,7 +238,7 @@ class Arr
      * Add an item in the end of an array using "dot" notation
      * @param $array
      * @param $value
-     * @param null $key
+     * @param null|string $key
      */
     public static function append(&$array, $value, $key = null)
     {
@@ -289,7 +293,7 @@ class Arr
      * @param int $depth
      * @return array
      */
-    public static function flatten($array, $depth = INF)
+    public static function flatten($array, int $depth = INF)
     {
         $result = [];
         foreach ($array as $item) {
@@ -614,8 +618,8 @@ class Arr
      * if no callback then returns non null, non false values (preserves keys)
      *
      * @param $array
-     * @param null $callback
-     * @param null $column
+     * @param $callback
+     * @param null|String $column
      * @return array
      */
     public static function filter($array, $callback = null, $column = null)
@@ -642,7 +646,7 @@ class Arr
      * Returns sum of values in an array
      *
      * @param $array
-     * @param null $column
+     * @param null|String $column
      * @return float|int
      */
     public static function sum($array, $column = null)
@@ -657,7 +661,7 @@ class Arr
      * Returns average of values in an array
      *
      * @param $array
-     * @param null $column
+     * @param null|String $column
      * @return float|int
      */
     public static function avg($array, $column = null)
@@ -672,7 +676,7 @@ class Arr
      * Returns product of values in an array
      *
      * @param $array
-     * @param null $column
+     * @param null|String $column
      * @return float|int
      */
     public static function prod($array, $column = null)
@@ -725,7 +729,7 @@ class Arr
      * Check if the array is unique
      *
      * @param $array
-     * @param null $column
+     * @param null|String $column
      * @return bool
      */
     public static function isUnique($array, $column = null)
@@ -741,7 +745,7 @@ class Arr
      *
      * @param $array
      * @param $value
-     * @param null $key
+     * @param null|String $key
      * @return array
      */
     public static function pluck($array, $value, $key = null)
@@ -788,7 +792,7 @@ class Arr
      * Retrieve duplicate items from the collection.
      *
      * @param $array
-     * @param null $column
+     * @param null|String $column
      * @return array
      */
     public static function duplicates($array, $column = null)
@@ -897,7 +901,7 @@ class Arr
      * Get the first item by the given key value pair.
      *
      * @param $array
-     * @param null $key
+     * @param null|String $key
      * @param mixed $operator
      * @param mixed $value
      * @return mixed
@@ -923,12 +927,12 @@ class Arr
      * Returns a multi-dimensional array with given key-value filter
      *
      * @param $array
-     * @param $index | $operator
+     * @param string $index | $operator
      * @param null $operator | $value
      * @param null $value
      * @return array
      */
-    public static function where($array, $index, $operator = null, $value = null)
+    public static function where($array, string $index, $operator = null, $value = null)
     {
         if ($value == null && $operator != null) {
             $value = $operator;
@@ -949,12 +953,12 @@ class Arr
      * Filter items such that the value of the given key is between the given values.
      *
      * @param $array
-     * @param $index | $from
+     * @param string $index | $from
      * @param $from | $to
      * @param null $to
      * @return array
      */
-    public static function between($array, $index, $from, $to = null)
+    public static function between($array, string $index, $from, $to = null)
     {
         if (self::isMulti($array)) {
             return self::where(
@@ -989,11 +993,11 @@ class Arr
      * Concatenate values of a given key as a string.
      *
      * @param $array
-     * @param $column | $glue
+     * @param string $column | $glue
      * @param null $glue
      * @return string
      */
-    public static function implode($array, $column, $glue = null)
+    public static function implode($array, string $column, $glue = null)
     {
         if (self::isMulti($array) && $column) {
             return implode($glue, array_column($array, $column));
@@ -1005,7 +1009,7 @@ class Arr
      * Get the min value of a given key.
      *
      * @param $array
-     * @param null $column
+     * @param null|string $column
      * @return mixed
      */
     public function min($array, $column = null)
@@ -1020,7 +1024,7 @@ class Arr
      * Get the max value of a given key.
      *
      * @param $array
-     * @param null $column
+     * @param null|string $column
      * @return mixed
      */
     public function max($array, $column = null)
@@ -1035,7 +1039,7 @@ class Arr
      * Get an array of all elements that pass a given test.
      *
      * @param $array
-     * @param null $column
+     * @param null|string $column
      * @param callable|mixed $callback
      * @return array
      */
@@ -1061,7 +1065,7 @@ class Arr
      * Get an array of all elements that do not pass a given test.
      *
      * @param $array
-     * @param null $column
+     * @param null|string $column
      * @param callable|mixed $callback
      * @return array
      */

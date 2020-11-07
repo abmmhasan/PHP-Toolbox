@@ -67,12 +67,13 @@ class Str
         if ($search === '') {
             return $subject;
         }
+        $pos = mb_strrpos($subject, $search);
 
-        if ($pos = mb_strrpos($subject, $search) === false) {
-            return $subject;
+        if ($pos !== false) {
+            return mb_substr($subject, 0, $pos, 'UTF-8');
         }
 
-        return mb_substr($subject, 0, $pos, 'UTF-8');
+        return $subject;
     }
 
     /**
@@ -145,13 +146,13 @@ class Str
     /**
      * Determine if a given string matches a given pattern.
      *
-     * @param string|array $pattern
+     * @param string|array $patterns
      * @param string $value
      * @return bool
      */
-    public static function is($pattern, string $value)
+    public static function is($patterns, string $value)
     {
-        $patterns = Arr::wrap($pattern);
+        $patterns = Arr::wrap($patterns);
 
         if (empty($patterns)) {
             return false;
