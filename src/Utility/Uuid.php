@@ -13,6 +13,31 @@ final class Uuid
     ];
 
     /**
+     * Generate UUID v1 string
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public static function v1()
+    {
+        $time = microtime(false);
+        $time = substr($time, 11) . substr($time, 2, 7);
+        $time = str_pad(dechex($time + 0x01b21dd213814000), 16, '0', STR_PAD_LEFT);
+        $clockSeq = random_int(0, 0x3fff);
+        $node = sprintf('%06x%06x',
+            random_int(0, 0xffffff) | 0x010000,
+            random_int(0, 0xffffff)
+        );
+        return sprintf('%08s-%04s-1%03s-%04x-%012s',
+            substr($time, -8),
+            substr($time, -12, 4),
+            substr($time, -15, 3),
+            $clockSeq | 0x8000,
+            $node
+        );
+    }
+
+    /**
      * Generate UUID v3 string
      *
      * @param string|null $string

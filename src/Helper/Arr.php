@@ -51,17 +51,6 @@ final class Arr
         return is_array($array) && count($array) !== count($array, COUNT_RECURSIVE);
     }
 
-    /**
-     * Determine whether the given value is accessible as an array.
-     *
-     * @param $array
-     * @return bool
-     */
-    public static function accessible($array)
-    {
-        return is_array($array);
-    }
-
 
     /**
      * If the given value is not an array and not null, wrap it in one.
@@ -934,7 +923,7 @@ final class Arr
      */
     public static function where($array, string $index, $operator = null, $value = null)
     {
-        if ($value == null && $operator != null) {
+        if ($value === null && $operator !== null) {
             $value = $operator;
             $operator = null;
         }
@@ -953,9 +942,9 @@ final class Arr
      * Filter items such that the value of the given key is between the given values.
      *
      * @param $array
-     * @param string $index | $from
+     * @param string|int|float $index | $from
      * @param int|float $from | $to
-     * @param null $to
+     * @param null|int|float $to
      * @return array
      */
     public static function between($array, string $index, $from, $to = null)

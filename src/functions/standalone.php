@@ -67,7 +67,7 @@ if (!function_exists('compare')) {
      *
      * @param $retrieved
      * @param $value
-     * @param null $operator
+     * @param null|string $operator
      * @return bool.
      */
     function compare($retrieved, $value, $operator = null)
