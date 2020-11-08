@@ -979,52 +979,6 @@ final class Arr
     }
 
     /**
-     * Concatenate values of a given key as a string.
-     *
-     * @param $array
-     * @param string $column | $glue
-     * @param null|string $glue
-     * @return string
-     */
-    public static function implode($array, string $column, $glue = null)
-    {
-        if (self::isMulti($array) && $column) {
-            return implode($glue, array_column($array, $column));
-        }
-        return implode($column, $array);
-    }
-
-    /**
-     * Get the min value of a given key.
-     *
-     * @param $array
-     * @param null|string $column
-     * @return mixed
-     */
-    public function min($array, $column = null)
-    {
-        if (self::isMulti($array) && $column) {
-            return min(array_column($array, $column));
-        }
-        return min($array);
-    }
-
-    /**
-     * Get the max value of a given key.
-     *
-     * @param $array
-     * @param null|string $column
-     * @return mixed
-     */
-    public function max($array, $column = null)
-    {
-        if (self::isMulti($array) && $column) {
-            return max(array_column($array, $column));
-        }
-        return max($array);
-    }
-
-    /**
      * Get an array of all elements that pass a given test.
      *
      * @param $array
