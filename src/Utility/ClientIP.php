@@ -6,7 +6,7 @@ namespace AbmmHasan\Toolbox\Utility;
 
 use AbmmHasan\Toolbox\Helper\Arr;
 
-final class IP
+final class ClientIP
 {
     private static $checkedIps = [];
     private static $clientIp;
@@ -56,13 +56,13 @@ final class IP
     }
 
     /**
-     * Checks if an IPv4 or IPv6 address is contained in the list of given IPs or subnets.
+     * Checks if Client IP is contained in the list of given IPs or subnets.
      *
      * @param string|array $ips List of IPs or subnets (can be a string if only a single one)
      *
-     * @return bool Whether the IP is valid
+     * @return bool Whether the ClientIP is valid
      */
-    public static function checkIp($ips)
+    public static function check($ips)
     {
         Arr::wrap($ips);
         self::get();
@@ -79,7 +79,7 @@ final class IP
     }
 
     /**
-     * Anonymizes an IP/IPv6.
+     * Anonymizes an ClientIP/IPv6.
      *
      * Removes the last byte for v4 and the last 8 bytes for v6 IPs
      * @param string $ip
@@ -114,11 +114,11 @@ final class IP
 
     /**
      * Compares two IPv4 addresses.
-     * In case a subnet is given, it checks if it contains the request IP.
+     * In case a subnet is given, it checks if it contains the request ClientIP.
      *
      * @param string $ip IPv4 address or subnet in CIDR notation
      *
-     * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
+     * @return bool Whether the request ClientIP matches the ClientIP, or whether the request ClientIP is within the CIDR subnet
      */
     private static function checkIp4(string $ip)
     {
@@ -155,11 +155,11 @@ final class IP
 
     /**
      * Compares two IPv6 addresses.
-     * In case a subnet is given, it checks if it contains the request IP.
+     * In case a subnet is given, it checks if it contains the request ClientIP.
      *
      * @param string $ip IPv6 address or subnet in CIDR notation
      *
-     * @return bool Whether the IP is valid
+     * @return bool Whether the ClientIP is valid
      *
      * @throws \RuntimeException When IPV6 support is not enabled
      * @see https://github.com/dsp/v6tools
