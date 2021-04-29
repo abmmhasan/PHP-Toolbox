@@ -12,7 +12,7 @@ final class Crypt
      *
      * @var string
      */
-    private const CIPHER = 'aes-256-cbc';
+    private const CIPHER = 'AES-256-CBC';
 
     /**
      * Hash function

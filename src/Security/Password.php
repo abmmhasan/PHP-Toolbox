@@ -4,6 +4,8 @@
 namespace AbmmHasan\Toolbox\Security;
 
 
+use Exception;
+
 final class Password
 {
     private static $combo = [
@@ -25,15 +27,15 @@ final class Password
      *
      * @param int $length
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function random(int $length = 9)
+    public static function strong(int $length = 9): string
     {
         if ($length < 8) {
-            throw new \Exception('Password length should be atleast 8');
+            throw new Exception('Password length should be atleast 8');
         }
         do {
-            $password = self::genByLength($length);
+            $password = self::random($length);
             $isStrong = preg_match('/[a-z]+/', $password) &&
                 preg_match('/[A-Z]+/', $password) &&
                 preg_match("/\d/", $password) &&
@@ -47,9 +49,9 @@ final class Password
      *
      * @param string $string
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function fromString(string $string)
+    public static function fromString(string $string): string
     {
         $string = str_split(strtolower($string));
         $converted = [];
@@ -65,12 +67,26 @@ final class Password
         return implode('', $converted);
     }
 
-    private static function genByLength($length)
+    /**
+     * Generate a random password of a given length and defined Set
+     *
+     * @param int $length
+     * @param array $type
+     * @return string
+     * @throws Exception
+     */
+    public static function random(int $length, array $type = ['u', 'l', 'd', 's']): string
     {
         $sets = $password = [];
-        foreach (self::$combo as $type => $items) {
+        foreach (self::$combo as $group => $items) {
+            if (!in_array($group, $type)) {
+                continue;
+            }
             shuffle($items);
             $sets = array_merge($sets, $items);
+        }
+        if (empty($sets)) {
+            throw new Exception('No detectable type found!');
         }
         for ($i = 0; $i < $length; $i++) {
             $password[] = $sets[array_rand($sets)];
