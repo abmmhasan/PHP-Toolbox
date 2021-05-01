@@ -12,20 +12,26 @@ final class Random
      * Generate Secure random string of a given length
      *
      * @param int $length
-     * @param $prefix
-     * @param $postfix
-     * @return false|string
+     * @param string $prefix
+     * @param string $postfix
+     * @return string
      */
-    public static function string($length = 32, $prefix = '', $postfix = '')
+    public static function string(int $length = 32, string $prefix = '', string $postfix = ''): string
     {
         try {
+            if (!empty($prefix . $postfix)) {
+                $length = $length - strlen($prefix . $postfix);
+            }
+            if ($length < 1) {
+                return $prefix . $postfix;
+            }
             return $prefix .
                 substr(
                     str_replace(['+', '/', '='], '', base64_encode(random_bytes($length))),
                     0, $length)
                 . $postfix;
         } catch (Exception $e) {
-            return false;
+            return '';
         }
     }
 
@@ -35,14 +41,14 @@ final class Random
      * @param int $length
      * @return false|int
      */
-    public static function number($length = 6)
+    public static function number(int $length = 6)
     {
         try {
             $min = 1 . str_repeat(0, $length - 1);
             $max = str_repeat(9, $length);
             return random_int((int)$min, (int)$max);
         } catch (Exception $e) {
-            return false;
+            return '';
         }
     }
 

@@ -75,7 +75,7 @@ final class Password
      * @return string
      * @throws Exception
      */
-    public static function random(int $length, array $type = ['u', 'l', 'd', 's']): string
+    public static function random(int $length = 9, array $type = ['u', 'l', 'd', 's']): string
     {
         $sets = $password = [];
         foreach (self::$combo as $group => $items) {
