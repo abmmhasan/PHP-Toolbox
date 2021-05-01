@@ -6,7 +6,7 @@ namespace AbmmHasan\Toolbox\Security;
 
 use Exception;
 
-class SafeCrypt
+final class SafeCrypt
 {
     private $secret = '';
     private $salt = '';
