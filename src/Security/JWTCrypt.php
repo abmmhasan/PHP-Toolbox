@@ -31,16 +31,16 @@ final class JWTCrypt
      * @param string $issuer the name or identifier of the issuer
      * @param string $audience Specify the audience of the JWT as csv
      * @param string $subject Type of JWT payload, local/global identifier for what this JWT is for
-     * @param string|null $key a unique string, which could be used to validate token
+     * @param string|null $jwtID a unique string, which could be used to validate token
      * @return string
      * @throws Exception
      */
-    public function registerClaims(string $issuer, string $audience, string $subject, string $key = null): string
+    public function registerClaims(string $issuer, string $audience, string $subject, string $jwtID = null): string
     {
         $this->payload['iss'] = $issuer;
         $this->payload['aud'] = $audience;
         $this->payload['sub'] = $subject;
-        return $this->payload['jti'] = $key ?? Random::string();
+        return $this->payload['jti'] = $jwtID ?? Random::string();
     }
 
     /**
@@ -67,7 +67,7 @@ final class JWTCrypt
     /**
      * Get JWT token for a given payload
      *
-     * @param $payload
+     * @param array|string $payload
      * @param bool $encodedSignature signature should be base64 encoded
      * @return string
      * @throws Exception
@@ -88,27 +88,45 @@ final class JWTCrypt
     }
 
     /**
-     * Get verified content
+     * Get content (signature verified payload)
      *
      * @param $token
      * @param bool $encodedSignature signature is base64 encoded
-     * @return array
+     * @return mixed|null
      */
-    public function getContent($token, bool $encodedSignature = true): array
+    public function getContent($token, bool $encodedSignature = true)
     {
         $parts = explode(".", $token);
-        $header = base64_decode($parts[0]);
-        $payload = base64_decode($parts[1]);
-        $signature = hash_hmac('SHA512', $header . $payload, $this->secret);
-        if ($encodedSignature) {
-            $signature = trim(base64_encode($signature), '=');
-        }
-        if ($signature === $parts[2]) {
-            $payload = json_decode($payload, true);
-            $now = time();
-            if ($payload['iat'] <= $now && $payload['nbf'] <= $now && $payload['exp'] > $now) {
-                return $payload;
+        if (count($parts) === 3) {
+            $header = base64_decode($parts[0]);
+            $payload = base64_decode($parts[1]);
+            $signature = hash_hmac('SHA512', $header . $payload, $this->secret);
+            if ($encodedSignature) {
+                $signature = trim(base64_encode($signature), '=');
+            }
+            if ($signature === $parts[2]) {
+                return json_decode($payload, true);
             }
         }
+        return null;
+    }
+
+    /**
+     * Verify payload through register information
+     *
+     * @param array $payload payload obtained from JWT
+     * @param string $subject subject to match with
+     * @param string $audience applicable audience
+     * @param string $jwtID (optional) match token
+     * @return bool
+     */
+    public function verifyRegister(array $payload, string $subject, string $audience, string $jwtID = ''): bool
+    {
+        return !empty($payload) &&
+            count(array_intersect_key($payload, array_flip(['iat', 'nbf', 'exp', 'iss', 'aud', 'sub', 'jti']))) === 7 &&
+            $payload['iat'] <= ($now = time()) && $payload['nbf'] <= $now && $payload['exp'] > $now &&
+            $payload['sub'] == $subject &&
+            in_array($audience, str_getcsv($payload['aud'])) &&
+            (empty($jwtID) || $jwtID == $payload['jti']);
     }
 }
