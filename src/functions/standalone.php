@@ -67,10 +67,10 @@ if (!function_exists('compare')) {
      *
      * @param $retrieved
      * @param $value
-     * @param null|string $operator
+     * @param string|null $operator
      * @return bool.
      */
-    function compare($retrieved, $value, $operator = null)
+    function compare($retrieved, $value, string $operator = null): bool
     {
         switch ($operator) {
             case '!=':
@@ -103,7 +103,7 @@ if (!function_exists('is_blank')) {
      * @param mixed $value
      * @return bool
      */
-    function is_blank($value)
+    function is_blank($value): bool
     {
         if (is_null($value)) {
             return true;
@@ -137,7 +137,7 @@ if (!function_exists('retry')) {
      *
      * @throws Exception
      */
-    function retry(int $times, callable $callback, $sleep = 0, $when = null)
+    function retry(int $times, callable $callback, int $sleep = 0, $when = null)
     {
         $attempts = 0;
         $times--;
@@ -169,10 +169,10 @@ if (!function_exists('formatBytes')) {
      *
      * @param $bytes
      * @param int $precision
-     * @return mixed
+     * @return string
      *
      */
-    function formatBytes($bytes, $precision = 2)
+    function formatBytes($bytes, int $precision = 2): string
     {
         $units = array('B', 'KB', 'MB', 'GB', 'TB');
         $bytes = max($bytes, 0);
@@ -207,7 +207,7 @@ if (!function_exists('httpDate')) {
      * @return string A formatted date.
      * @throws Exception
      */
-    function httpDate($date = null)
+    function httpDate($date = null): string
     {
         if ($date instanceof \DateTime) {
             $date = \DateTimeImmutable::createFromMutable($date);

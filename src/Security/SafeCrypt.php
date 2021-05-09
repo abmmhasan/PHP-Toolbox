@@ -15,7 +15,9 @@ final class SafeCrypt
     private $keyIterationCount = 10000;
     private $keyLength = 50;
     private $keyAlgo = 'SHA3-512';
+    private $isIVPredefined = false;
 
+    private $enableSignature = true;
     private $hmacAlgo = 'SHA3-512';
     private $sha2Len = 64;
 
@@ -33,6 +35,29 @@ final class SafeCrypt
         $this->secret = $secret;
         $this->salt = $salt;
         $this->iv = $iv;
+        if (!empty($iv)) {
+            $this->isIVPredefined = true;
+        }
+    }
+
+    /**
+     * Disable Signature
+     */
+    public function disableSignature()
+    {
+        $this->enableSignature = false;
+    }
+
+    /**
+     * Return set IV
+     *
+     * Can be called after IV is set (if automatic generation then after encryption)
+     *
+     * @return string
+     */
+    public function getIV(): string
+    {
+        return $this->iv;
     }
 
     /**
@@ -125,7 +150,13 @@ final class SafeCrypt
             OPENSSL_RAW_DATA,
             $this->iv
         );
-        return $this->iv . hash_hmac($this->hmacAlgo, $cText, $encryptionKey, true) . $cText;
+        if ($this->enableSignature === true) {
+            $cText = hash_hmac($this->hmacAlgo, $cText, $encryptionKey, true) . $cText;
+        }
+        if ($this->isIVPredefined === false) {
+            $cText = $this->iv . $cText;
+        }
+        return $cText;
     }
 
     /**
@@ -137,19 +168,33 @@ final class SafeCrypt
     public function decrypt(string $encryptedString)
     {
         $ivLen = openssl_cipher_iv_length($this->encryptionMethod);
-        $cText = substr($encryptedString, $ivLen + $this->sha2Len);
+        $cTextOffset = 0;
         $encryptionKey = self::getKey();
-        return hash_equals(
-            substr($encryptedString, $ivLen, $this->sha2Len),
-            hash_hmac($this->hmacAlgo, $cText, $encryptionKey, true)
-        )
-            ? openssl_decrypt(
-                $cText,
-                $this->encryptionMethod,
-                $encryptionKey,
-                OPENSSL_RAW_DATA,
-                substr($encryptedString, 0, $ivLen))
-            : false;
+        if ($definedIV = $this->isIVPredefined === false) {
+            $this->iv = substr($encryptedString, 0, $ivLen);
+            $cTextOffset += $ivLen;
+        }
+        if ($this->enableSignature === true) {
+            $cTextOffset += $this->sha2Len;
+            $hash = substr(
+                $encryptedString,
+                $definedIV ? $ivLen : 0,
+                $this->sha2Len
+            );
+        }
+        $cText = substr($encryptedString, $cTextOffset);
+
+        if ($this->enableSignature === true && !empty($hash) && !hash_equals($hash, hash_hmac($this->hmacAlgo, $cText, $encryptionKey, true))) {
+            return false;
+        }
+
+        return openssl_decrypt(
+            $cText,
+            $this->encryptionMethod,
+            $encryptionKey,
+            OPENSSL_RAW_DATA,
+            $this->iv
+        );
     }
 
     /**
